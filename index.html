@@ -11,8 +11,7 @@
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .hexagram-column { border-left: 1px dashed rgba(212, 163, 89, 0.3); }
-        .hexagram-column:first-child { border-left: none; }
+        rt { font-family: sans-serif; font-weight: normal; letter-spacing: 0; }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen pb-12 selection:bg-amber-500 selection:text-slate-900">
@@ -28,7 +27,7 @@
             </div>
         </header>
 
-        <main class="flex-1 p-4 space-y-6">
+        <main class="flex-1 p-3 space-y-5">
 
             <section class="bg-slate-800/60 border border-slate-700/50 rounded-2xl p-4 shadow-xl">
                 <div @click="ui.inputExpanded = !ui.inputExpanded" class="flex justify-between items-center cursor-pointer">
@@ -40,32 +39,17 @@
 
                 <div v-show="ui.inputExpanded" class="mt-4 space-y-4 transition-all duration-300">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">求問之事 (建議必填，AI解析依據)</label>
-                        <input type="text" v-model="form.question" placeholder="例：請示今年下半年開展新業務之財運" class="w-full bg-slate-950/60 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-colors">
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">求問之事 (選填)</label>
+                        <input type="text" v-model="form.question" placeholder="例：請示今年下半年開展新業務之財運發展" class="w-full bg-slate-950/60 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-amber-500 transition-colors">
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">問題類型 (AI 解卦策略)</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button @click="form.questionType = 'single'" :class="['py-2 px-1 text-[11px] font-medium rounded-xl border transition-all', form.questionType === 'single' ? 'bg-amber-500/20 border-amber-500 text-amber-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
-                                <i class="fa-solid fa-crosshairs mb-1 block"></i> 單一事件
-                            </button>
-                            <button @click="form.questionType = 'choice'" :class="['py-2 px-1 text-[11px] font-medium rounded-xl border transition-all', form.questionType === 'choice' ? 'bg-sky-500/20 border-sky-500 text-sky-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
-                                <i class="fa-solid fa-code-branch mb-1 block"></i> 選擇題(A或B)
-                            </button>
-                            <button @click="form.questionType = 'fortune'" :class="['py-2 px-1 text-[11px] font-medium rounded-xl border transition-all', form.questionType === 'fortune' ? 'bg-purple-500/20 border-purple-500 text-purple-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
-                                <i class="fa-solid fa-globe mb-1 block"></i> 綜合/週運勢
-                            </button>
-                        </div>
-                    </div>
-
-                    <div v-if="form.questionType === 'single' || form.questionType === 'choice'">
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">占卜事件性質 (決定吉凶能量計算)</label>
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">占卜事件性質</label>
                         <div class="grid grid-cols-2 gap-2">
-                            <button @click="form.eventType = 'positive'" :class="['py-2 px-3 text-xs font-medium rounded-xl border transition-all', form.eventType === 'positive' ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
+                            <button @click="form.eventType = 'positive'" :class="['py-2 px-3 text-xs font-medium rounded-xl border transition-all', form.eventType === 'positive' ? 'bg-amber-500/10 border-amber-500 text-amber-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
                                 <i class="fa-solid fa-arrow-trend-up mr-1"></i> 進取型 (求財/事業)
                             </button>
-                            <button @click="form.eventType = 'negative'" :class="['py-2 px-3 text-xs font-medium rounded-xl border transition-all', form.eventType === 'negative' ? 'bg-rose-500/10 border-rose-500 text-rose-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
+                            <button @click="form.eventType = 'negative'" :class="['py-2 px-3 text-xs font-medium rounded-xl border transition-all', form.eventType === 'negative' ? 'bg-sky-500/10 border-sky-500 text-sky-400 font-bold' : 'bg-slate-950/40 border-slate-800 text-slate-400']">
                                 <i class="fa-solid fa-shield-halved mr-1"></i> 避災型 (問疾/官非)
                             </button>
                         </div>
@@ -82,22 +66,22 @@
 
                     <div v-if="form.mode === 'A'" class="bg-slate-950/40 p-3 rounded-xl border border-slate-800 space-y-2">
                         <div class="text-xs text-slate-400 leading-relaxed">請輸入六爻符號（由初爻至上爻排布，支援空格、逗號或混合輸入，如 <code class="text-amber-400 font-mono">6,7 -, X 9,+</code>）：</div>
-                        <input type="text" v-model="form.modeAInput" placeholder="請在此輸入符號或數字" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 font-mono tracking-widest focus:outline-none focus:border-amber-500">
+                        <input type="text" v-model="form.modeAInput" placeholder="請在此輸入" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-200 font-mono tracking-widest focus:outline-none focus:border-amber-500">
                     </div>
 
                     <div v-if="form.mode === 'B'" class="bg-slate-950/40 p-3 rounded-xl border border-slate-800">
                         <div class="grid grid-cols-3 gap-2">
                             <div>
                                 <label class="block text-[10px] text-slate-400 text-center mb-0.5">上卦數字</label>
-                                <input type="number" v-model.number="form.modeBNum1" placeholder="除8取餘" class="w-full text-center bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <input type="number" v-model.number="form.modeBNum1" placeholder="除8取餘" class="w-full text-center bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs">
                             </div>
                             <div>
                                 <label class="block text-[10px] text-slate-400 text-center mb-0.5">下卦數字</label>
-                                <input type="number" v-model.number="form.modeBNum2" placeholder="除8取餘" class="w-full text-center bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <input type="number" v-model.number="form.modeBNum2" placeholder="除8取餘" class="w-full text-center bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs">
                             </div>
                             <div>
                                 <label class="block text-[10px] text-slate-400 text-center mb-0.5">動爻數字</label>
-                                <input type="number" v-model.number="form.modeBNum3" placeholder="除6取餘" class="w-full text-center bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                                <input type="number" v-model.number="form.modeBNum3" placeholder="除6取餘" class="w-full text-center bg-slate-950/80 border border-slate-700 rounded-xl px-2 py-1.5 text-xs">
                             </div>
                         </div>
                     </div>
@@ -133,15 +117,11 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">指定解卦標的 (用神)</label>
-                        <div class="grid grid-cols-4 gap-1.5">
+                        <label class="block text-xs font-semibold text-slate-400 mb-1">指定核心解解讀標的 (用神 / 世爻)</label>
+                        <div class="grid grid-cols-3 gap-1.5">
                             <label v-for="god in ['父母','兄弟','妻財','官鬼','子孫','世爻']" :key="god" :class="['flex items-center justify-center py-2 px-1 text-xs rounded-xl border cursor-pointer transition-all', form.targetGod === god ? 'bg-amber-500 border-amber-500 text-slate-950 font-bold shadow-md' : 'bg-slate-950/50 border-slate-800 text-slate-300 hover:border-slate-700']">
                                 <input type="radio" v-model="form.targetGod" :value="god" class="hidden">
                                 <span>{{ god }}</span>
-                            </label>
-                            <label :class="['col-span-2 flex items-center justify-center py-2 px-1 text-xs rounded-xl border cursor-pointer transition-all', form.targetGod === '不知道(由AI判斷)' ? 'bg-sky-500 border-sky-500 text-slate-950 font-bold shadow-md' : 'bg-slate-950/50 border-slate-800 text-sky-400 hover:border-slate-700']">
-                                <input type="radio" v-model="form.targetGod" value="不知道(由AI判斷)" class="hidden">
-                                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 不知道 (由 AI 判斷)
                             </label>
                         </div>
                     </div>
@@ -156,16 +136,6 @@
                                 <div :class="['bg-white w-5 h-5 rounded-full shadow-md transition-transform duration-300 transform', form.aiMode ? 'translate-x-6' : 'translate-x-0']"></div>
                             </button>
                         </div>
-
-                        <div v-if="form.aiMode" class="space-y-2 bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-                            <div class="flex gap-2">
-                                <select v-model="form.aiProvider" class="bg-slate-900 border border-slate-700 rounded-lg text-xs text-slate-300 p-1.5 focus:outline-none">
-                                    <option value="gemini">Gemini API</option>
-                                    <option value="openai">OpenAI API</option>
-                                </select>
-                                <input type="password" v-model="form.apiKey" placeholder="AQ.Ab8RN6KF9RuFiUVWNRfNPH6UYxwC5bBunRCK1CrLJgTUPR9VrA" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-200 focus:outline-none">
-                            </div>
-                        </div>
                     </div>
 
                     <button @click="executeDivination" :disabled="ui.dbLoading" :class="['w-full font-bold py-3 px-4 rounded-xl text-sm transition-all shadow-lg flex items-center justify-center gap-2', ui.dbLoading ? 'bg-slate-700 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 active:scale-[0.98] text-slate-950']">
@@ -175,101 +145,60 @@
                 </div>
             </section>
 
-            <section v-if="result" class="space-y-5">
+            <section v-if="result" class="space-y-4">
                 
-                <div class="bg-slate-800/80 border border-slate-700/60 rounded-2xl p-4 text-center shadow-xl relative overflow-hidden">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-3 text-center shadow-xl relative overflow-hidden">
                     <div class="absolute top-0 right-0 transform translate-x-4 -translate-y-4 text-slate-700/10 text-7xl font-mono select-none font-bold">%</div>
-                    <h3 class="text-xs font-semibold text-slate-400 tracking-wider">能量評估 / 事件吉凶趨勢</h3>
+                    <h3 class="text-xs font-semibold text-slate-400 tracking-wider">用神能量 / 成事率評估</h3>
                     
-                    <div class="mt-3 relative flex items-center justify-center">
-                        <div class="w-full bg-slate-950 h-3.5 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                    <div class="mt-2.5 relative flex items-center justify-center">
+                        <div class="w-full bg-slate-950 h-3 rounded-full overflow-hidden p-0.5 border border-slate-800">
                             <div :class="['h-full rounded-full transition-all duration-1000 ease-out', getProgressBarClass(result.score)]" :style="{ width: result.score + '%' }"></div>
                         </div>
                     </div>
-                    <div class="mt-2 flex justify-between items-baseline px-1">
-                        <span :class="['text-lg font-black tracking-wide', getScoreTextColor(result.score)]">【 {{ getRiskLevel(result.score) }} 】</span>
-                        <span class="text-3xl font-mono font-black text-slate-100">{{ result.score }}<span class="text-sm font-sans font-normal text-slate-400 ml-0.5">%</span></span>
+                    <div class="mt-1.5 flex justify-between items-baseline px-1">
+                        <span :class="['text-sm font-black tracking-wide', getScoreTextColor(result.score)]">【 {{ getRiskLevel(result.score) }} 】</span>
+                        <span class="text-2xl font-mono font-black text-slate-100">{{ result.score }}<span class="text-xs font-sans font-normal text-slate-400 ml-0.5">%</span></span>
                     </div>
                 </div>
 
-                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 shadow-2xl space-y-4">
-                    <div class="text-center border-b border-slate-800 pb-2 flex justify-around text-xs font-bold text-amber-400">
-                        <div>本卦：{{ result.benGua.name }}</div>
-                        <div class="text-slate-500">｜</div>
-                        <div class="text-slate-300">變卦：{{ result.bianGua.name }}</div>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 pt-2 font-mono text-xs text-center relative">
-                        <div class="space-y-4 flex flex-col justify-between">
-                            <div v-for="(line, idx) in result.benGua.lines" :key="idx" class="relative group py-1 bg-slate-900/30 rounded-lg">
-                                <div v-if="line.fuGod" class="absolute -left-1 -top-3 scale-75 bg-purple-950 text-purple-300 px-1 border border-purple-800 rounded text-[9px] z-10 whitespace-nowrap">
-                                    伏:{{ line.fuGod.relative }}{{ line.fuGod.branch }}
-                                </div>
-                                <div class="text-slate-400 scale-90">{{ line.relative }}</div>
-                                <div class="text-slate-200 font-bold my-0.5" :class="{'text-amber-400 bg-amber-500/10 rounded border border-amber-500/20 px-0.5': line.isTarget}">
-                                    {{ line.branch }}{{ line.element }}
-                                </div>
-                                <div class="text-[10px] scale-95 font-sans font-black tracking-tighter" :class="line.isYin ? 'text-blue-400' : 'text-red-400'">
-                                    {{ line.isYin ? '▅▅  ▅▅' : '▅▅▅▅▅' }}
-                                </div>
-                                <div class="text-[10px] font-sans font-bold text-amber-500/90 mt-0.5">
-                                    <span v-if="line.isShi">世</span>
-                                    <span v-if="line.isYing">應</span>
-                                    <span class="text-red-500 text-xs font-black ml-0.5">{{ line.actionMark }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="space-y-4 flex flex-col justify-between hexagram-column">
-                            <div v-for="(line, idx) in result.bianGua.lines" :key="idx" class="py-1">
-                                <div class="text-slate-400 scale-90">{{ line.relative }}</div>
-                                <div class="text-slate-200 font-bold my-0.5" :class="{'text-amber-400 bg-amber-500/10 rounded border border-amber-500/20 px-0.5': line.isTarget}">
-                                    {{ line.branch }}{{ line.element }}
-                                </div>
-                                <div class="text-[10px] tracking-tighter" :class="line.isYin ? 'text-blue-400' : 'text-red-400'">
-                                    {{ line.isYin ? '▅▅  ▅▅' : '▅▅▅▅▅' }}
-                                </div>
-                                <div class="text-[10px] font-sans font-bold text-slate-400 mt-0.5">
-                                    <span v-if="line.isShi" class="opacity-50">世</span>
-                                    <span v-if="line.isYing" class="opacity-50">應</span>
-                                    <span>&nbsp;</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <gua-card title="本卦" :gua="result.benGua"></gua-card>
+                    <gua-card title="互卦" :gua="result.huGua"></gua-card>
+                    <gua-card title="變卦" :gua="result.bianGua"></gua-card>
                 </div>
 
-                <div class="bg-slate-800/40 border border-slate-700/40 rounded-2xl p-4 shadow-xl">
-                    <h4 class="text-xs font-bold text-slate-400 mb-2.5 flex items-center gap-1.5">
-                        <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i> 動態能量現象狀態掃描
+                <div class="bg-slate-800/40 border border-slate-700/40 rounded-xl p-3 shadow-xl">
+                    <h4 class="text-[11px] font-bold text-slate-400 mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-500 text-[10px]"></i> 動態能量狀態掃描
                     </h4>
                     <div class="flex flex-wrap gap-1.5">
-                        <span v-for="tag in result.allTags" :key="tag.name" :class="['px-2.5 py-1 text-[11px] font-medium rounded-xl border transition-all duration-500 shadow-sm', tag.active ? 'bg-amber-500/20 border-amber-500 text-amber-400 font-bold' : 'bg-slate-900/40 border-slate-800/80 text-slate-600 select-none']">
+                        <span v-for="tag in result.allTags" :key="tag.name" :class="['px-2 py-0.5 text-[10px] font-medium rounded-lg border transition-all duration-500 shadow-sm', tag.active ? 'bg-amber-500/20 border-amber-500 text-amber-400 font-bold' : 'bg-slate-900/40 border-slate-800/80 text-slate-600 select-none']">
                             {{ tag.name }}
                         </span>
                     </div>
                 </div>
 
-                <div class="bg-slate-800/40 border border-slate-700/40 rounded-2xl p-4 shadow-xl space-y-3">
-                    <h4 class="text-xs font-bold text-slate-400 flex items-center gap-1.5 border-b border-slate-700/50 pb-1.5">
+                <div class="bg-slate-800/40 border border-slate-700/40 rounded-xl p-3 shadow-xl space-y-2">
+                    <h4 class="text-[11px] font-bold text-slate-400 flex items-center gap-1.5 border-b border-slate-700/50 pb-1.5">
                         <i class="fa-solid fa-book-open text-amber-500 text-[10px]"></i> 經典卦爻辭核心解義
                     </h4>
-                    <div class="text-xs space-y-2.5 leading-relaxed">
+                    <div class="text-xs space-y-2 leading-relaxed">
                         <div>
-                            <span class="inline-block bg-slate-900 text-amber-400 border border-slate-700 px-1.5 py-0.5 rounded text-[10px] font-bold mr-1">本卦卦辭</span>
+                            <span class="inline-block bg-slate-900 text-amber-400 border border-slate-700 px-1.5 py-0.5 rounded text-[9px] font-bold mr-1">本卦卦辭</span>
                             <span class="text-slate-400 font-serif font-bold italic">「{{ result.benGua.meaning.original }}」</span>
                         </div>
-                        <div class="text-slate-300 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60 text-[11px]">
+                        <div class="text-slate-300 bg-slate-950/40 p-2 rounded-lg border border-slate-800/60 text-[11px]">
                             {{ result.benGua.meaning.vernacular }}
                         </div>
                         
-                        <div v-if="result.dongYaoMeanings && result.dongYaoMeanings.length > 0" class="border-t border-slate-700/30 pt-2 space-y-3">
+                        <div v-if="result.dongYaoMeanings && result.dongYaoMeanings.length > 0" class="border-t border-slate-700/30 pt-2 space-y-2">
                             <div v-for="(yao, idx) in result.dongYaoMeanings" :key="idx" class="space-y-1">
                                 <div>
-                                    <span class="inline-block bg-red-950/50 text-red-400 border border-red-900/50 px-1.5 py-0.5 rounded text-[10px] font-bold mr-1">第 {{ yao.line }} 爻發動</span>
+                                    <span class="inline-block bg-rose-950/50 text-rose-400 border border-rose-900/50 px-1.5 py-0.5 rounded text-[9px] font-bold mr-1">第 {{ yao.line }} 爻發動</span>
                                     <span class="text-slate-400 font-serif italic">「{{ yao.original }}」</span>
                                 </div>
-                                <div class="text-slate-300 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60 text-[11px]">
+                                <div class="text-slate-300 bg-slate-950/40 p-2 rounded-lg border border-slate-800/60 text-[11px]">
                                     {{ yao.vernacular }}
                                 </div>
                             </div>
@@ -277,21 +206,21 @@
                     </div>
                 </div>
 
-                <div v-if="form.aiMode" class="bg-slate-800/90 border-2 border-amber-500/30 rounded-2xl p-4 shadow-2xl space-y-3 relative">
-                    <div class="flex justify-between items-center border-b border-slate-700/60 pb-2">
-                        <h4 class="text-sm font-bold text-amber-400 flex items-center gap-1.5">
+                <div v-if="form.aiMode" class="bg-slate-800/90 border border-amber-500/30 rounded-xl p-3 shadow-2xl space-y-2 relative">
+                    <div class="flex justify-between items-center border-b border-slate-700/60 pb-1.5">
+                        <h4 class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
                             <i class="fa-solid fa-brain text-amber-400"></i> AI 智慧整合診斷報告
                         </h4>
-                        <span v-if="ui.aiLoading" class="text-xs text-amber-400 animate-pulse flex items-center gap-1">
+                        <span v-if="ui.aiLoading" class="text-[10px] text-amber-400 animate-pulse flex items-center gap-1">
                             <i class="fa-solid fa-spinner animate-spin"></i> 智者推演中...
                         </span>
                     </div>
 
-                    <div class="text-[13px] leading-relaxed text-slate-200 whitespace-pre-wrap font-sans" v-if="ui.aiResponse">
+                    <div class="text-xs leading-relaxed text-slate-200 whitespace-pre-wrap font-sans" v-if="ui.aiResponse">
                         {{ ui.aiResponse }}
                     </div>
-                    <div class="text-xs text-slate-500 italic py-4 text-center" v-else-if="!ui.aiLoading">
-                        請確認上方 API Key 已填寫，並點擊「開始易數邏輯推演」觸發 AI 運算。
+                    <div class="text-[10px] text-slate-500 italic py-3 text-center" v-else-if="!ui.aiLoading">
+                        請點擊「開始易數邏輯推演」觸發 AI 運算。
                     </div>
                 </div>
 
@@ -302,17 +231,77 @@
     <script>
         const { createApp, ref, reactive, onMounted } = Vue;
 
-        createApp({
+        const GuaCard = {
+            props: ['title', 'gua'],
+            methods: {
+                getElementColor(el) {
+                    const map = { '木': 'text-emerald-400', '火': 'text-rose-400', '土': 'text-amber-500', '金': 'text-slate-200', '水': 'text-sky-400' };
+                    return map[el] || 'text-slate-400';
+                }
+            },
+            template: `
+            <div class="bg-slate-800 border-2 border-slate-700/80 rounded-xl overflow-hidden flex flex-col shadow-lg">
+                <div class="bg-slate-900 border-b border-slate-700/80 pt-2 pb-1.5 text-center relative flex flex-col items-center">
+                    <div class="absolute top-0.5 left-1.5 text-[9px] font-black text-slate-500">{{ title }}</div>
+                    
+                    <div class="flex justify-center gap-0.5 text-sm font-bold text-amber-400 leading-none mt-1">
+                        <ruby v-for="(char, i) in gua.chars" :key="i" class="flex flex-col items-center">
+                            {{ char }}<rt class="text-[8px] text-amber-200/70 -translate-y-0.5">{{ gua.zhuyin[i] }}</rt>
+                        </ruby>
+                    </div>
+                    
+                    <div class="text-[9px] text-slate-400 mt-1 font-bold tracking-widest bg-slate-950/50 px-2 py-0.5 rounded-full">
+                        {{ gua.palace }}宮 ({{ gua.palaceElement }})
+                    </div>
+                </div>
+                <div class="flex-1 p-1 flex flex-col gap-1 justify-between bg-slate-800/50">
+                    <div v-for="line in gua.lines" :key="line.index" class="flex items-center text-[10px] h-5 rounded bg-slate-900/60 px-0.5 border border-slate-700/30 overflow-hidden relative">
+                        
+                        <div class="w-2.5 text-center font-black" :class="line.isShi ? 'text-amber-500' : (line.isYing ? 'text-sky-400' : 'text-transparent')">
+                            {{ line.isShi ? '世' : (line.isYing ? '應' : '空') }}
+                        </div>
+                        
+                        <div class="flex-1 mx-1 flex items-center justify-center h-full">
+                            <template v-if="line.isDong">
+                                <span v-if="!line.isYin" class="text-rose-500 font-black text-sm">〇</span>
+                                <span v-else class="text-rose-500 font-black text-sm">✕</span>
+                            </template>
+                            <template v-else>
+                                <div v-if="!line.isYin" class="w-full h-1.5 bg-slate-300 rounded-[1px]"></div>
+                                <div v-else class="w-full h-1.5 flex justify-between"><div class="w-[42%] h-full bg-slate-300 rounded-[1px]"></div><div class="w-[42%] h-full bg-slate-300 rounded-[1px]"></div></div>
+                            </template>
+                        </div>
+                        
+                        <div class="w-5 text-center font-bold tracking-tighter" :class="getElementColor(line.element)">
+                            {{ line.branch }}<span class="scale-90 inline-block">{{ line.element }}</span>
+                        </div>
+                        
+                        <div class="w-5 text-center text-slate-300 font-medium tracking-tighter flex flex-col items-center justify-center relative">
+                            <span :class="{'text-amber-400 font-bold bg-amber-500/10 px-0.5 rounded': line.isTarget}">{{ line.relative.charAt(0) }}</span>
+                            <div v-if="line.fuGod" class="absolute -left-11 text-[7px] font-mono text-purple-300 bg-purple-950/90 px-0.5 py-0.5 rounded border border-purple-800/60 z-10 whitespace-nowrap leading-none">
+                                伏:{{ line.fuGod.relative }}{{ line.fuGod.branch }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            `
+        };
+
+        const app = createApp({
             setup() {
                 const currentTime = ref({ solar: '', lunar: '', ganzhi: '' });
                 const form = ref({
-                    question: '', questionType: 'single', eventType: 'positive',
-                    mode: 'A', modeAInput: '', modeBNum1: null, modeBNum2: null, modeBNum3: null,
-                    modeCUpper: 0, formCLower: 7, modeCDong: [],
-                    targetGod: '不知道(由AI判斷)', aiMode: false, aiProvider: 'gemini', apiKey: ''
+                    question: '', eventType: 'positive', mode: 'A', modeAInput: '', 
+                    modeBNum1: null, modeBNum2: null, modeBNum3: null,
+                    modeCUpper: 0, formCLower: 7, modeCDong: [], targetGod: '妻財', 
+                    aiMode: false
                 });
 
-                // 加入 dbLoading 狀態，確保 JSON 載入前無法執行排盤
+                // 金鑰直接寫入此變數，確保只能使用 Gemini 引擎
+                const API_KEY = 'AQ.Ab8RN6KF9RuFiUVWNRfNPH6UYxwC5bBunRCK1CrLJgTUPR9VrA';
+
                 const ui = ref({ inputExpanded: true, aiLoading: false, aiResponse: '', dbLoading: true });
                 const result = ref(null);
 
@@ -340,11 +329,9 @@
 
                 const updateClock = () => {
                     const now = new Date();
-                    const solarStr = `${now.getFullYear()} (${now.getFullYear() - 1911})年 ${now.getMonth() + 1}月 ${now.getDate()}日 ` + 
+                    const solarStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ` + 
                                      `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
                     const lunarDate = Lunar.fromDate(now);
-                    
-                    // 【修正關鍵錯誤】：原來的 getYearInGanGao 函式不存在，改為正確的 getYearInGanZhi
                     currentTime.value = {
                         solar: solarStr,
                         lunar: `${lunarDate.getMonthInChinese()}月${lunarDate.getDayInChinese()}`,
@@ -352,19 +339,19 @@
                     };
                 };
 
-                // 非同步加載 JSON 檔案
                 onMounted(async () => {
                     updateClock();
                     setInterval(updateClock, 1000);
-                    form.value.apiKey = localStorage.getItem('ys_divination_key') || '';
 
                     try {
                         const response = await fetch('./database.json');
                         if (!response.ok) throw new Error('讀取失敗');
-                        staticData.hexagramMeanings = await response.json();
+                        const text = await response.text();
+                        const cleanedText = text.replace(/^[\s\S]*?\{/, '{').replace(/;?\s*$/, '');
+                        staticData.hexagramMeanings = JSON.parse(cleanedText);
                     } catch (err) {
                         console.error(err);
-                        alert("【系統警告】無法讀取 database.json。\n\n如果您是直接點擊 HTML 檔案（網址顯示為 file:///...），請改用 Local Server（如 VS Code 的 Live Server）開啟。");
+                        alert("【系統警告】無法讀取 database.json。\n\n請確保您透過 Local Server (如 VS Code 的 Live Server) 運行網頁。");
                     } finally {
                         ui.value.dbLoading = false;
                     }
@@ -391,7 +378,6 @@
                 };
 
                 const parseModeB = () => {
-                    // 後端自動處理任何數字的 % 8 與 % 6
                     const n1 = (form.value.modeBNum1 || 1) % 8 || 8;
                     const n2 = (form.value.modeBNum2 || 1) % 8 || 8;
                     const dongIdx = (form.value.modeBNum3 || 1) % 6 || 6;
@@ -406,25 +392,29 @@
                     return lines;
                 };
 
-                // 將二進位轉碼為你上傳的 JSON 物件結構
                 const findGuaByBinary = (binary) => {
                     const found = staticData.hexagramMeanings[binary];
+                    const upBagua = staticData.bagua.find(b => b.binary === binary.substring(3,6));
+                    const loBagua = staticData.bagua.find(b => b.binary === binary.substring(0,3));
+                    let palace = '乾', chars = ['未', '知', '卦'], zhuyin = ['ㄨㄟˋ', 'ㄓ', 'ㄍㄨㄚˋ'];
+
                     if (found) {
-                        return { 
-                            name: found.name, 
-                            palace: found.palace, 
-                            meaning: { original: found.zhouyi || '無經文', vernacular: found.vernacular },
-                            linesData: found.lines // 保存動爻資料以供後續查詢
-                        };
+                        palace = found.palace;
+                        chars = found.chars || found.name.split('');
+                        zhuyin = found.zhuyin || [];
+                    } else if (upBagua && loBagua) {
+                        if (binary.startsWith('010')) palace = '坎';
+                        else if (binary.startsWith('000')) palace = '坤';
+                        const name = upBagua.name === loBagua.name ? `${upBagua.name}為天` : `${upBagua.name}${loBagua.name}卦`;
+                        chars = name.split('');
                     }
-                    // 防呆：萬一抓不到資料庫內容
-                    const upName = staticData.bagua.find(b => b.binary === binary.substring(3,6))?.name || '未知';
-                    const loName = staticData.bagua.find(b => b.binary === binary.substring(0,3))?.name || '未知';
-                    return {
-                        name: upName === loName ? `${upName}為天` : `${upName}${loName}卦`,
-                        palace: upName,
-                        meaning: { original: '易道深遠，變化無窮。', vernacular: '本卦代表當下時空磁場錯綜複合，各項因果正交互推演，利於靜觀其變。' },
-                        linesData: {}
+
+                    return { 
+                        name: found ? found.name : chars.join(''), 
+                        chars, zhuyin, palace,
+                        palaceElement: staticData.bagua.find(b => b.name === palace)?.element || '金',
+                        meaning: found ? { original: found.zhouyi || '無經文', vernacular: found.vernacular } : { original: '易理深邃。', vernacular: '無對應資料。' },
+                        linesData: found ? found.lines : {}
                     };
                 };
 
@@ -447,9 +437,9 @@
                         fullLines.push({
                             index: i, branch, element, relative,
                             isYin: binary[i] === '0',
+                            isDong: meta.isDong,
                             isShi: i === shiIndex,
                             isYing: i === (shiIndex + 3) % 6,
-                            actionMark: meta.isDong ? '○' : '',
                             isTarget: relative === targetGodName || (targetGodName === '世爻' && i === shiIndex),
                             fuGod: null
                         });
@@ -484,14 +474,18 @@
                     const bianBinary = bianLines.map(y => y ? '0' : '1').join('');
                     const bianGuaMeta = findGuaByBinary(bianBinary);
 
+                    const huLower = benBinary.substring(1, 4);
+                    const huUpper = benBinary.substring(2, 5);
+                    const huGuaMeta = findGuaByBinary(huLower + huUpper);
+
                     const benGuaFull = buildFullGuaDetails(benBinary, parsedLines, benGuaMeta.palace, form.value.targetGod);
                     const bianGuaFull = buildFullGuaDetails(bianBinary, bianLines.map(y=>({isYin:y, isDong:false})), bianGuaMeta.palace, form.value.targetGod);
+                    const huGuaFull = buildFullGuaDetails(huLower + huUpper, [2,3,4,3,4,5].map(idx => ({isYin:benBinary[idx]==='0', isDong:false})), huGuaMeta.palace, form.value.targetGod);
 
-                    // ====== 動態萃取動爻爻辭 ======
                     const dongYaoMeanings = [];
                     parsedLines.forEach((l, idx) => {
                         if (l.isDong) {
-                            const yaoIdxStr = String(idx + 1); // 將 1~6 轉為字串以對應 JSON 屬性
+                            const yaoIdxStr = String(idx + 1); 
                             let originalText = `${idx+1}爻發動。`;
                             let vernacularText = `力量正向變卦推進。`;
                             if (benGuaMeta.linesData && benGuaMeta.linesData[yaoIdxStr]) {
@@ -502,9 +496,8 @@
                         }
                     });
 
-                    // ====== 飛伏神檢查 ======
-                    let targetFound = benGuaFull.lines.some(l => l.relative === form.value.targetGod || form.value.targetGod === '世爻' || form.value.targetGod === '不知道(由AI判斷)');
-                    if (!targetFound) {
+                    let targetFound = benGuaFull.lines.some(l => l.relative === form.value.targetGod || form.value.targetGod === '世爻');
+                    if (!targetFound && form.value.targetGod !== '世爻') {
                         const palaceFirstGuaBinary = staticData.bagua.find(b => b.name === benGuaMeta.palace).binary.repeat(2);
                         const palaceFirstGua = buildFullGuaDetails(palaceFirstGuaBinary, [], benGuaMeta.palace, form.value.targetGod);
                         const targetFuYao = palaceFirstGua.lines.find(l => l.relative === form.value.targetGod);
@@ -513,7 +506,6 @@
                         }
                     }
 
-                    // ====== 動態能量與分數推演 ======
                     let score = 50; 
                     const isPositive = form.value.eventType === 'positive'; 
                     const tags = [
@@ -557,17 +549,16 @@
                     score = Math.max(5, Math.min(98, score));
 
                     result.value = {
-                        score,
-                        allTags: tags,
-                        benGua: { name: benGuaMeta.name, lines: [...benGuaFull.lines].reverse(), meaning: benGuaMeta.meaning },
-                        bianGua: { name: bianGuaMeta.name, lines: [...bianGuaFull.lines].reverse(), meaning: bianGuaMeta.meaning },
-                        dongYaoMeanings // 傳遞給前端畫面展示
+                        score, allTags: tags,
+                        benGua: { ...benGuaMeta, lines: [...benGuaFull.lines].reverse() },
+                        huGua: { ...huGuaMeta, lines: [...huGuaFull.lines].reverse() },
+                        bianGua: { ...bianGuaMeta, lines: [...bianGuaFull.lines].reverse() },
+                        dongYaoMeanings
                     };
 
                     ui.value.inputExpanded = false;
 
-                    if (form.value.aiMode && form.value.apiKey) {
-                        localStorage.setItem('ys_divination_key', form.value.apiKey);
+                    if (form.value.aiMode) {
                         await callAIService();
                     }
                 };
@@ -591,58 +582,20 @@
                 const callAIService = async () => {
                     ui.value.aiLoading = true;
                     ui.value.aiResponse = '';
-
-                    const activeTagsStr = result.value.allTags.filter(t => t.active).map(t => t.name).join('、') || '無特殊動態';
-                    const prompt = `你是一位精通易數推論及文王卦的智者。請嚴格依照以下邏輯進行解析，避免進行複雜的易理二進位或天干地支推演，直接基於我提供的計算結果進行白話解讀：
-
-【系統已計算之基礎資訊】
-1. 求問事項：${form.value.question || '未提供，請根據卦象推測或請使用者補充'}
-2. 事件性質：${form.value.eventType === 'positive' ? '積極進取型 (好事喜生合、忌沖剋)' : '防範災化/避險型 (壞事喜沖剋散、忌生合拖延)'}
-3. 問題類型：${form.value.questionType === 'single' ? '單一事件' : form.value.questionType === 'choice' ? '選擇題 (請以世爻代A，應爻代B進行比較)' : '綜合/週運勢 (請全息掃描妻財、官鬼、世爻)'}
-4. 使用者選擇之用神：${form.value.targetGod}
-5. 系統評分 (吉凶/成事度)：${result.value.score}% (${getRiskLevel(result.value.score)})
-6. 盤面動態能量：${activeTagsStr}
-7. 本卦：${result.value.benGua.name} (含義: ${result.value.benGua.meaning.vernacular})
-8. 變卦：${result.value.bianGua.name}
-
-【解析執行步驟】
-▶ 步驟一：用神檢核與分流 (非常重要)
-- 檢查使用者選擇的用神（${form.value.targetGod}）是否契合「求問事項」。
-- 情況 A：若使用者選擇「不知道(由AI判斷)」，請直接點出正確的主用神與副用神，然後繼續【步驟二】。
-- 情況 B：若選擇合理或稍有偏差，請溫和建議最佳用神，然後繼續【步驟二】。
-- 情況 C：若選擇「完全錯誤」（例如問病情選了妻財、問財運選了父母），請回覆：「⚠️ 【用神選擇錯誤】：(解釋原因)」，並**立即終止所有後續解析**。
-
-▶ 步驟二：深度白話解析 (若步驟一為情況C則不輸出此段)
-- 信任【系統評分】與【盤面動態能量】，不用重新推演地支五行，將分數與動態標籤轉化為白話文解釋給使用者聽。
-- 若為「單一事件」：結合分數與本/變卦卦義，給出精準的吉凶結論與趨吉避凶建議。
-- 若為「選擇題」：直接以卦義和動態變化，客觀比較世應雙方的優劣，給出具體選A還是選B的建議。
-- 若為「綜合運勢」：不侷限單一用神，針對事業、財運、人際等整體狀態給出綜合指引。
-
-請保持語氣智慧、客觀，直接給出結論，不要過度堆砌專業術語。`;
+                    const prompt = `你是一位精通易數推論及文王卦的智者。請直接基於以下資訊進行白話解讀：\n求問：${form.value.question || '未提供'}\n系統評分：${result.value.score}%\n本卦：${result.value.benGua.name}\n變卦：${result.value.bianGua.name}\n請給出精準的吉凶結論與趨吉避凶建議，語氣客觀，直接給出結論。`;
 
                     try {
-                        if (form.value.aiProvider === 'gemini') {
-                            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${form.value.apiKey}`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                            });
-                            const data = await res.json();
-                            ui.value.aiResponse = data.candidates[0].content.parts[0].text;
-                        } else {
-                            const res = await fetch('https://api.openai.com/v1/chat/completions', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${form.value.apiKey}` },
-                                body: JSON.stringify({
-                                    model: 'gpt-4o-mini',
-                                    messages: [{ role: 'user', content: prompt }]
-                                })
-                            });
-                            const data = await res.json();
-                            ui.value.aiResponse = data.choices[0].message.content;
-                        }
+                        // 統一使用已寫死的 Gemini API_KEY 發送請求
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                        });
+                        const data = await res.json();
+                        if(data.error) throw new Error(data.error.message);
+                        ui.value.aiResponse = data.candidates[0].content.parts[0].text;
                     } catch (err) {
-                        ui.value.aiResponse = `AI 通訊失敗，請檢查您的網路連線或 API 金鑰是否正確。錯誤細節: ${err.message}`;
+                        ui.value.aiResponse = `AI 通訊失敗: ${err.message}`;
                     } finally {
                         ui.value.aiLoading = false;
                     }
@@ -650,7 +603,10 @@
 
                 return { form, ui, result, staticData, currentTime, toggleModeCDong, executeDivination, getProgressBarClass, getScoreTextColor, getRiskLevel };
             }
-        }).mount('#app');
+        });
+        
+        app.component('gua-card', GuaCard);
+        app.mount('#app');
     </script>
 </body>
 </html>
