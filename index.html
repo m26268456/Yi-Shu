@@ -299,8 +299,8 @@
                     aiMode: false
                 });
 
-                // 金鑰直接寫入此變數，確保只能使用 Gemini 引擎
-                const API_KEY = 'AQ.Ab8RN6KF9RuFiUVWNRfNPH6UYxwC5bBunRCK1CrLJgTUPR9VrA';
+                // 核心調整：完美對接你持有的 AQ. 格式企業級 OAuth2 金鑰憑證
+                const API_KEY = 'AQ.Ab8RN6IIsVXTbce16E3ShBr4GPX88IlggQGjnd6AtgvThClVug';
 
                 const ui = ref({ inputExpanded: true, aiLoading: false, aiResponse: '', dbLoading: true });
                 const result = ref(null);
@@ -585,17 +585,20 @@
                     const prompt = `你是一位精通易數推論及文王卦的智者。請直接基於以下資訊進行白話解讀：\n求問：${form.value.question || '未提供'}\n系統評分：${result.value.score}%\n本卦：${result.value.benGua.name}\n變卦：${result.value.bianGua.name}\n請給出精準的吉凶結論與趨吉避凶建議，語氣客觀，直接給出結論。`;
 
                     try {
-                        // 統一使用已寫死的 Gemini API_KEY 發送請求
-                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+                        // 🛠️ 核心修正：將金鑰移出 URL 參數，並依照 Google GCP OAuth2 的規範包裝進 Headers Authorization 中！
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${API_KEY}` // 👈 AQ. 憑證的正確傳遞規格：以 Bearer Token 形式通過驗證
+                            },
                             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                         });
                         const data = await res.json();
                         if(data.error) throw new Error(data.error.message);
                         ui.value.aiResponse = data.candidates[0].content.parts[0].text;
                     } catch (err) {
-                        ui.value.aiResponse = `AI 通訊失敗: ${err.message}`;
+                        ui.value.aiResponse = `AI 通訊失敗: ${err.message}\n(提示：若持續出現無效憑證，請確保您的 GCP 專案內已啟用 Generative Language API 服務服務權限。)`;
                     } finally {
                         ui.value.aiLoading = false;
                     }
